@@ -1,0 +1,4 @@
+django>=4.2,<5.0
+numpy>=1.21.0,<2.0
+django-cors-headers>=3.14.0,<4.0
+colorama>=0.4.4,<1.0
