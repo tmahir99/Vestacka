@@ -18,7 +18,11 @@ SECRET_KEY = 'django-insecure-c+x)#d1kwefbw+1m&*iq0^q33-m_=uf1j(#d3x#2)*b_zkv&(a
 
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['127.0.0.1', 'localhost', 'connect3-1.onrender.com']
+
+CSRF_TRUSTED_ORIGINS = [
+    'https://connect3-1.onrender.com',
+]
 
 INSTALLED_APPS = [
     'django.contrib.admin',
