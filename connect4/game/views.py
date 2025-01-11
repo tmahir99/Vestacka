@@ -5,7 +5,6 @@ import json
 from .game_logic import GameState
 from .agents import DifficultyAgent
 
-# Global dictionary to store game states
 game_states = {}
 
 def index(request):
@@ -40,7 +39,6 @@ def new_game(request):
         if load_file:
             game.load_from_file(load_file)
         
-        # Store game state
         session_key = request.session.session_key
         if not session_key:
             request.session.create()
@@ -76,14 +74,12 @@ def make_move(request):
         game_data = game_states[session_key]
         game = game_data['game']
         
-        # Make human move
         if not game.make_move(column):
             return JsonResponse({'error': 'Invalid move'}, status=400)
             
         winner = game.check_winner()
         is_draw = game.is_draw()
         
-        # Make AI move if needed
         ai_move = None
         if (not winner and not is_draw and 
             game_data['game_type'] in ['human_vs_ai', 'ai_vs_ai']):

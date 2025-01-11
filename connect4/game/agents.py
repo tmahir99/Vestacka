@@ -16,24 +16,21 @@ class Agent(ABC):
             'hard': 2.0
         }[self.difficulty]
 
-        # Positional weight map for column priority
         positional_weights = [
             [1.3, 1.4, 1.5, 1.6, 1.5, 1.4, 1.3],  # Bottom row
-            [1.2, 1.3, 1.4, 1.5, 1.4, 1.3, 1.2],  # Second to last row
-            [1.1, 1.2, 1.3, 1.4, 1.3, 1.2, 1.1],  # Middle rows
+            [1.2, 1.3, 1.4, 1.5, 1.4, 1.3, 1.2],
+            [1.1, 1.2, 1.3, 1.4, 1.3, 1.2, 1.1],
             [1.1, 1.2, 1.3, 1.4, 1.3, 1.2, 1.1],
             [1.0, 1.1, 1.2, 1.3, 1.2, 1.1, 1.0],
             [1.0, 1.1, 1.2, 1.3, 1.2, 1.1, 1.0]   # Top row
         ]
 
-        # Row prioritization weights
-        row_weights = [1.5, 1.4, 1.3, 1.3, 1.3, 1.3]  # Bottom row has the highest priority
+        row_weights = [1.5, 1.4, 1.3, 1.3, 1.3, 1.3] 
 
         # Horizontal windows
         for row in range(6):
             for col in range(4):
                 window = state[row][col:col+4]
-                # Apply both row and column weights
                 score += (
                     self._evaluate_window(window, player, opponent)
                     * positional_weights[row][col]
@@ -41,31 +38,26 @@ class Agent(ABC):
                     * difficulty_multiplier
                 )
 
-        # Vertical windows
         for row in range(3):
             for col in range(7):
                 window = [state[row+i][col] for i in range(4)]
-                # Vertical scoring prioritizes rows implicitly since it checks downward
                 score += (
                     self._evaluate_window(window, player, opponent)
                     * positional_weights[row][col]
                     * row_weights[row]
-                    * 1.5  # Vertical play importance multiplier
+                    * 1.5 
                     * difficulty_multiplier
                 )
 
-        # Diagonal windows
         for row in range(3):
             for col in range(4):
-                # Positive and negative slope diagonals
                 pos_diagonal = [state[row+i][col+i] for i in range(4)]
                 neg_diagonal = [state[row+3-i][col+i] for i in range(4)]
-                # Row prioritization applied to diagonals
                 score += (
                     self._evaluate_window(pos_diagonal, player, opponent)
                     * positional_weights[row][col]
                     * row_weights[row]
-                    * 1.2  # Diagonal play importance multiplier
+                    * 1.2  
                     * difficulty_multiplier
                 )
                 score += (
@@ -93,9 +85,8 @@ class Agent(ABC):
         elif player_count == 1 and empty_count == 3:
             score += 5
 
-        # Stronger defensive play on all windows
         if opponent_count == 3 and empty_count == 1:
-            score -= 300  # Strong priority on blocking threats
+            score -= 300
         elif opponent_count == 2 and empty_count == 2:
             score -= 90
         elif opponent_count == 1 and empty_count == 3:
@@ -134,25 +125,19 @@ class MinimaxABAgent(Agent):
             return value
 
     def _make_move(self, state: List[List[int]], col: int, player: int) -> List[List[int]]:
-        # First, check if the column is full
         if all(state[row][col] != 0 for row in range(6)):
             raise ValueError(f"Cannot make move in column {col} - column is full")
         
-        # Create a deep copy of the state to avoid modifying the original
         new_state = [row[:] for row in state]
         
-        # Check from bottom to top if there's an empty spot
         for row in range(5, -1, -1):
             if new_state[row][col] == 0:
                 new_state[row][col] = player
                 return new_state
         
-        # This line should never be reached due to the initial full column check
         raise ValueError(f"Unexpected error in column {col}")
 
     def _is_terminal_node(self, state: List[List[int]]) -> bool:
-        # Check for win
-        # Horizontal
         for row in range(6):
             for col in range(4):
                 if (state[row][col] != 0 and
@@ -160,7 +145,6 @@ class MinimaxABAgent(Agent):
                     state[row][col+2] == state[row][col+3]):
                     return True
 
-        # Vertical
         for row in range(3):
             for col in range(7):
                 if (state[row][col] != 0 and
@@ -168,7 +152,6 @@ class MinimaxABAgent(Agent):
                     state[row+2][col] == state[row+3][col]):
                     return True
 
-        # Diagonal
         for row in range(3):
             for col in range(4):
                 if (state[row][col] != 0 and
@@ -189,7 +172,6 @@ class DifficultyAgent(Agent):
     def __init__(self, difficulty: str):
         self.difficulty = difficulty.lower()
 
-        # Increased depth for harder difficulty
         if self.difficulty == "easy":
             self.max_depth = 4
         elif self.difficulty == "medium":
@@ -206,9 +188,8 @@ class DifficultyAgent(Agent):
         valid_moves =valid_moves = [col for col in range(7) if state[0][col] == 0]
         
         if not valid_moves:
-            raise ValueError("No valid moves left!")  # This is a safeguard in case all columns are full
+            raise ValueError("No valid moves left!")
 
-        # Enhanced side and center bias
         column_weights = {
             'easy': {3: 2.0, 2: 2.0, 4: 2.0, 1: 2.0, 5: 2.0, 0: 2.0, 6: 2.0},
             'medium': {3: 2.5, 2: 2.5, 4: 2.5, 1: 2.5, 5: 2.5, 0: 2.5, 6: 2.5},
@@ -223,7 +204,6 @@ class DifficultyAgent(Agent):
         for move in valid_moves:
             new_state = self._make_move(state, move, 1)
             base_score = self._minimax(new_state, max_depth - 1, False, alpha, beta)
-            # Apply positional weight for both center and sides
             weighted_score = base_score * column_weights[move]
 
             if weighted_score > best_score:
@@ -233,7 +213,6 @@ class DifficultyAgent(Agent):
 
         return best_move
 
-    # Reuse minimax and move methods from MinimaxABAgent
     _minimax = MinimaxABAgent._minimax
     _make_move = MinimaxABAgent._make_move
     _is_terminal_node = MinimaxABAgent._is_terminal_node
