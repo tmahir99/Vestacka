@@ -25,11 +25,8 @@ SECRET_KEY = 'django-insecure-smkd)(y42va&6qbz@!-h%a#tx(8w5c(zyix9_htvi5*1$t7_mw
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['127.0.0.1', 'localhost', 'vestacka.onrender.com']
+ALLOWED_HOSTS = []
 
-CSRF_TRUSTED_ORIGINS = [
-    'https://vestacka.onrender.com',
-]
 
 # Application definition
 

@@ -1,17 +1,68 @@
-<!-- puzzle/templates/puzzle/index.html -->
 {% load static %}
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Pyzzle</title>
     <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            color: #333;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+        }
+
+        h2 {
+            color: #4CAF50;
+        }
+
+        .algorithm-selection {
+            max-width: 400px;
+            width: 100%;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #ffffff;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        select, button {
+            width: 90%;
+            padding: 10px;
+            margin: 10px 0;
+            font-size: 16px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+
+        button {
+            background-color: #4CAF50;
+            color: white;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
         .puzzle-container {
             display: grid;
             gap: 5px;
+            grid-template-columns: repeat(3, 1fr);
             width: 300px;
             margin: 20px auto;
         }
-        
+
         .puzzle-tile {
             aspect-ratio: 1;
             display: flex;
@@ -20,48 +71,42 @@
             background-color: #4CAF50;
             color: white;
             font-size: 24px;
+            font-weight: bold;
             cursor: pointer;
+            border-radius: 4px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         }
-        
+
         .empty {
             background-color: #ffffff;
             border: 2px dashed #4CAF50;
         }
-        
+
         .controls {
             text-align: center;
             margin: 20px;
         }
-        
+
+        .controls p {
+            margin: 5px 0;
+            color: #666;
+        }
+
         #game-container {
             display: none;
         }
-        
+
         .step-counter {
             text-align: center;
             font-size: 18px;
             margin: 10px 0;
-        }
-        
-        .algorithm-selection {
-            max-width: 400px;
-            margin: 50px auto;
-            padding: 20px;
-            text-align: center;
-            background-color: #f5f5f5;
-            border-radius: 8px;
-        }
-        
-        select, button {
-            margin: 10px;
-            padding: 8px 16px;
-            font-size: 16px;
+            color: #555;
         }
     </style>
 </head>
 <body>
     {% csrf_token %}
-    
+
     <div id="algorithm-selection" class="algorithm-selection">
         <h2>Select Algorithm and Heuristic</h2>
         <select id="algorithm">
@@ -69,34 +114,34 @@
             <option value="best_first">Best-First Search</option>
             <option value="astar">A* Algorithm</option>
         </select>
-        <br>
         <select id="heuristic">
             <option value="manhattan">Manhattan Distance</option>
             <option value="hamming">Hamming Distance</option>
         </select>
-        <br>
         <button onclick="startGame()">Start Puzzle</button>
     </div>
-    
+
     <div id="game-container">
         <div id="step-counter" class="step-counter">Step 0 of 0</div>
         <div id="puzzle-container" class="puzzle-container"></div>
-        
         <div class="controls">
-            <p>Press ENTER to start solution</p>
-            <p>Press SPACE to play/pause</p>
-            <p>Press ESC to exit</p>
+            <p><strong>Controls:</strong></p>
+            <p>Press <strong>ENTER</strong> to start solution</p>
+            <p>Press <strong>SPACE</strong> to play/pause</p>
+            <p>Press <strong>ESC</strong> to exit</p>
         </div>
     </div>
-    
+
     <script src="{% static 'puzzle/js/puzzle.js' %}"></script>
     <script>
         const game = new PuzzleGame(3);
-        
+
         function startGame() {
             const algorithm = document.getElementById('algorithm').value;
             const heuristic = document.getElementById('heuristic').value;
             game.startGame(algorithm, heuristic);
+            document.getElementById('algorithm-selection').style.display = 'none';
+            document.getElementById('game-container').style.display = 'block';
         }
     </script>
 </body>
