@@ -4,6 +4,7 @@ class Connect4Game {
         this.currentPlayer = 1;
         this.gameType = 'human_vs_human';
         this.difficulty = 'medium';
+        this.heuristicType = 'first_best';
         this.isGameActive = false;
         this.isThinking = false;
         
@@ -18,6 +19,7 @@ class Connect4Game {
         this.aiThinkingTimeDisplay = document.getElementById('aiThinkingTime');
         this.gameTypeSelect = document.getElementById('gameType');
         this.difficultySelect = document.getElementById('difficulty');
+        this.heuristicTypeSelect = document.getElementById('heuristicType');
         this.loadGameInput = document.getElementById('loadGame');
         
         this.boardElement.innerHTML = '';
@@ -86,6 +88,7 @@ class Connect4Game {
     async startNewGame() {
         this.gameType = this.gameTypeSelect.value;
         this.difficulty = this.difficultySelect.value;
+        this.heuristicType = this.heuristicTypeSelect.value;
         
         const response = await fetch('/new_game', {
             method: 'POST',
@@ -94,7 +97,8 @@ class Connect4Game {
             },
             body: JSON.stringify({
                 game_type: this.gameType,
-                difficulty: this.difficulty
+                difficulty: this.difficulty,
+                heuristic_type: this.heuristicType
             })
         });
         
@@ -178,7 +182,8 @@ class Connect4Game {
             body: JSON.stringify({
                 game_type: this.gameType,
                 difficulty: this.difficulty,
-                load_file: content
+                load_file: content,
+                heuristic_type: 'HeuristicType.MANHATTAN'
             })
         });
         

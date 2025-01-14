@@ -3,7 +3,7 @@ from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 import json
 from .game_logic import GameState
-from .agents import DifficultyAgent
+from .agents import DifficultyAgent, HeuristicType
 
 game_states = {}
 
@@ -32,7 +32,15 @@ def new_game(request):
         data = json.loads(request.body)
         game_type = data.get('game_type', 'human_vs_human')
         difficulty = data.get('difficulty', 'medium')
+        heuristic_type_str = data.get('heuristic_type', 'standard')
         load_file = data.get('load_file', None)
+        
+        heuristic_map = {
+            'standard': HeuristicType.STANDARD,
+            'first_best': HeuristicType.FIRST_BEST,
+            'manhattan': HeuristicType.MANHATTAN
+        }
+        heuristic_type = heuristic_map.get(heuristic_type_str, HeuristicType.FIRST_BEST)
         
         game = GameState()
         
@@ -46,7 +54,7 @@ def new_game(request):
         
         agent = None
         if game_type != 'human_vs_human':
-            agent = DifficultyAgent(difficulty)
+            agent = DifficultyAgent(difficulty, heuristic_type)  # Modified this line
         
         game_states[session_key] = {
             'game': game,
