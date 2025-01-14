@@ -59,18 +59,20 @@
             display: grid;
             gap: 5px;
             grid-template-columns: repeat(3, 1fr);
-            width: 300px;
+            /* width: 40rem; */
             margin: 20px auto;
         }
 
         .puzzle-tile {
+            height: 180px;
+            width: 320px;
             aspect-ratio: 1;
             display: flex;
             align-items: center;
             justify-content: center;
             background-color: #4CAF50;
-            color: white;
-            font-size: 24px;
+            color: #4CAF50;
+            font-size: 40px;
             font-weight: bold;
             cursor: pointer;
             border-radius: 4px;
@@ -90,6 +92,12 @@
         .controls p {
             margin: 5px 0;
             color: #666;
+        }
+
+        input {
+            margin: 5px 0;
+            color: #666;
+            font-size: large;
         }
 
         #game-container {
@@ -126,9 +134,10 @@
         <div id="puzzle-container" class="puzzle-container"></div>
         <div class="controls">
             <p><strong>Controls:</strong></p>
-            <p>Press <strong>ENTER</strong> to start solution</p>
-            <p>Press <strong>SPACE</strong> to play/pause</p>
-            <p>Press <strong>ESC</strong> to exit</p>
+            <input type="button" value ="Start over" onclick="history.go(0)" />
+            <div>Press <strong>ENTER</strong> to start solution OR <input type="button" value="Start" id="buttonStart"/></div>
+            <div>Press <strong>SPACE</strong> to play/pause OR <input type="button" value="Pause/Play" id="buttonPlayPause"/></div>
+            <div>Press <strong>ESC</strong> to exit OR <input type="button" value="Exit" id="buttonExit"/></div>
         </div>
     </div>
 
