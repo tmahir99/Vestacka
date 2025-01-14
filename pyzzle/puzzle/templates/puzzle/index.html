@@ -22,6 +22,32 @@
         h2 {
             color: #4CAF50;
         }
+        select, button {
+            width: 90%;
+            padding: 10px;
+            margin: 10px 0;
+            font-size: 16px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        
+        button {
+            background-color: #4CAF50;
+            color: white;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        
+        button:hover {
+            background-color: #45a049;
+        }
+        
+        .puzzle-container {
+            display: grid;
+            gap: 5px;
+            grid-template-columns: repeat(3, 1fr);
+            margin: 20px auto;
+        }
 
         .algorithm-selection {
             max-width: 400px;
@@ -35,38 +61,12 @@
             text-align: center;
         }
 
-        select, button {
-            width: 90%;
-            padding: 10px;
-            margin: 10px 0;
-            font-size: 16px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-        }
-
-        button {
-            background-color: #4CAF50;
-            color: white;
-            cursor: pointer;
-            transition: background-color 0.3s;
-        }
-
-        button:hover {
-            background-color: #45a049;
-        }
-
-        .puzzle-container {
-            display: grid;
-            gap: 5px;
-            grid-template-columns: repeat(3, 1fr);
-            /* width: 40rem; */
-            margin: 20px auto;
-        }
-
-        .puzzle-tile {
-            height: 180px;
-            width: 320px;
-            aspect-ratio: 1;
+        @media only screen and (max-width: 600px) {
+            .puzzle-container {
+                max-width: fit-content;
+        grid-template-columns: repeat(3, 40%);
+    }
+            .puzzle-tile {
             display: flex;
             align-items: center;
             justify-content: center;
@@ -81,7 +81,34 @@
 
         .empty {
             background-color: #ffffff;
-            border: 2px dashed #4CAF50;
+            border: dashed #4CAF50;
+            border-radius: 4px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        }   
+
+        .puzzle-tile {
+            height: 180px;
+            width: 320px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #4CAF50;
+            color: #4CAF50;
+            font-size: 40px;
+            font-weight: bold;
+            cursor: pointer;
+            border-radius: 4px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .empty {
+            height: 174px;
+            width: 314px;
+            background-color: #ffffff;
+            border: dashed #4CAF50;
+            border-radius: 4px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         }
 
         .controls {
@@ -98,6 +125,10 @@
             margin: 5px 0;
             color: #666;
             font-size: large;
+            border-color: #4CAF50;
+        }
+        strong{
+            color: #4CAF50;
         }
 
         #game-container {
