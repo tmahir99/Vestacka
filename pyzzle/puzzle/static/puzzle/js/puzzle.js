@@ -134,6 +134,24 @@ class PuzzleGame {
     }
     
     setupEventListeners() {
+        document.getElementById("buttonStart").onclick = () => {
+            if (!game.isPlaying) { 
+                game.isPlaying = true;
+                game.playSolution();
+            }
+        };
+
+        document.getElementById("buttonPlayPause").onclick = () => {
+                this.isPlaying = !this.isPlaying;
+                if (this.isPlaying) {
+                    this.playSolution();
+                }
+        }
+    
+        document.getElementById("buttonExit").onclick = () => {
+            window.close();
+        }
+
         document.addEventListener('keydown', (e) => {
             if (e.code === 'Enter' && !this.isSolved && this.solution.length > 0) {
                 if (!this.isPlaying) {

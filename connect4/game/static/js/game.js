@@ -4,6 +4,7 @@ class Connect4Game {
         this.currentPlayer = 1;
         this.gameType = 'human_vs_human';
         this.difficulty = 'medium';
+        this.heuristicType = 'first_best';
         this.isGameActive = false;
         this.isThinking = false;
         
@@ -18,9 +19,9 @@ class Connect4Game {
         this.aiThinkingTimeDisplay = document.getElementById('aiThinkingTime');
         this.gameTypeSelect = document.getElementById('gameType');
         this.difficultySelect = document.getElementById('difficulty');
+        this.heuristicTypeSelect = document.getElementById('heuristicType');
         this.loadGameInput = document.getElementById('loadGame');
         
-        // Create the board HTML
         this.boardElement.innerHTML = '';
         for (let row = 0; row < 6; row++) {
             const rowDiv = document.createElement('div');
@@ -36,7 +37,6 @@ class Connect4Game {
     }
     
     attachEventListeners() {
-        // Board click handler
         this.boardElement.addEventListener('click', (e) => {
             if (!this.isGameActive || this.isThinking) return;
             
@@ -47,40 +47,35 @@ class Connect4Game {
             }
         });
         
-        // New game button
         document.getElementById('newGame').addEventListener('click', () => {
             this.gameMessage.textContent = "";
             this.loadGameInput.value = ""
             this.startNewGame();
         });
         
-        // Save game button
         document.getElementById('saveGame').addEventListener('click', () => {
             this.saveGame();
         });
         
-        // Load game handler
         this.loadGameInput.addEventListener('change', (e) => {
             const file = e.target.files[0];
             if (file) {
                 const reader = new FileReader();
                 reader.onload = (e) => {
                     const fileContent = e.target.result;
-                    // Split the file content by newlines, filter out empty lines, and convert to integers
                     const dataArray = fileContent
                         .split('\n')
                         .map(item => item.trim())
-                        .filter(item => item !== '') // Remove empty strings
-                        .map(item => parseInt(item, 10)); // Convert remaining strings to numbers
+                        .filter(item => item !== '')
+                        .map(item => parseInt(item, 10));
         
-                    console.log(dataArray); // Logs: [0, 0, 1, 3, 2, 2, 3, 2]
-                    this.loadGame(dataArray); // Pass the array to your loadGame method
+                    console.log(dataArray);
+                    this.loadGame(dataArray);
                 };
                 reader.readAsText(file);
             }
         });        
         
-        // Keyboard controls
         document.addEventListener('keydown', (e) => {
             if (e.key === 'Space') {
                 this.togglePause();
@@ -93,6 +88,7 @@ class Connect4Game {
     async startNewGame() {
         this.gameType = this.gameTypeSelect.value;
         this.difficulty = this.difficultySelect.value;
+        this.heuristicType = this.heuristicTypeSelect.value;
         
         const response = await fetch('/new_game', {
             method: 'POST',
@@ -101,7 +97,8 @@ class Connect4Game {
             },
             body: JSON.stringify({
                 game_type: this.gameType,
-                difficulty: this.difficulty
+                difficulty: this.difficulty,
+                heuristic_type: this.heuristicType
             })
         });
         
@@ -185,7 +182,8 @@ class Connect4Game {
             body: JSON.stringify({
                 game_type: this.gameType,
                 difficulty: this.difficulty,
-                load_file: content
+                load_file: content,
+                heuristic_type: 'HeuristicType.MANHATTAN'
             })
         });
         
@@ -239,12 +237,11 @@ class Connect4Game {
     async startAIGame() {
         while (this.isGameActive && !this.isThinking && this.gameType === 'ai_vs_ai') {
             await new Promise(resolve => setTimeout(resolve, 1000));
-            await this.makeMove(0); // AI will choose the actual column
+            await this.makeMove(0);
         }
     }
 }
 
-// Start the game when the page loads
 document.addEventListener('DOMContentLoaded', () => {
     window.game = new Connect4Game();
 });

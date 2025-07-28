@@ -12,7 +12,7 @@ def solve_puzzle(request):
         import json
         data = json.loads(request.body)
         initial_state = tuple(data['initial_state'])
-        goal_state = tuple(data['goal_state'])  # Now will be [1,2,3,4,5,6,7,8,0]
+        goal_state = tuple(data['goal_state']) 
         algorithm = data['algorithm']
         heuristic = data.get('heuristic', 'manhattan')
         
@@ -22,7 +22,7 @@ def solve_puzzle(request):
             solver = BFSAlgorithm()
         elif algorithm == 'best_first':
             solver = BestFirstAlgorithm(heuristic_func)
-        else:  # A*
+        else: 
             solver = AStarAlgorithm(heuristic_func)
         
         steps = solver.get_steps(initial_state, goal_state)

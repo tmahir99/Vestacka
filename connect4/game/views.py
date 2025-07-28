@@ -3,9 +3,8 @@ from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 import json
 from .game_logic import GameState
-from .agents import DifficultyAgent
+from .agents import DifficultyAgent, HeuristicType
 
-# Global dictionary to store game states
 game_states = {}
 
 def index(request):
@@ -33,14 +32,21 @@ def new_game(request):
         data = json.loads(request.body)
         game_type = data.get('game_type', 'human_vs_human')
         difficulty = data.get('difficulty', 'medium')
+        heuristic_type_str = data.get('heuristic_type', 'standard')
         load_file = data.get('load_file', None)
+        
+        heuristic_map = {
+            'standard': HeuristicType.STANDARD,
+            'first_best': HeuristicType.FIRST_BEST,
+            'manhattan': HeuristicType.MANHATTAN
+        }
+        heuristic_type = heuristic_map.get(heuristic_type_str, HeuristicType.FIRST_BEST)
         
         game = GameState()
         
         if load_file:
             game.load_from_file(load_file)
         
-        # Store game state
         session_key = request.session.session_key
         if not session_key:
             request.session.create()
@@ -48,7 +54,7 @@ def new_game(request):
         
         agent = None
         if game_type != 'human_vs_human':
-            agent = DifficultyAgent(difficulty)
+            agent = DifficultyAgent(difficulty, heuristic_type)  # Modified this line
         
         game_states[session_key] = {
             'game': game,
@@ -76,14 +82,12 @@ def make_move(request):
         game_data = game_states[session_key]
         game = game_data['game']
         
-        # Make human move
         if not game.make_move(column):
             return JsonResponse({'error': 'Invalid move'}, status=400)
             
         winner = game.check_winner()
         is_draw = game.is_draw()
         
-        # Make AI move if needed
         ai_move = None
         if (not winner and not is_draw and 
             game_data['game_type'] in ['human_vs_ai', 'ai_vs_ai']):

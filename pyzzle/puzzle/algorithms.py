@@ -9,14 +9,12 @@ class Algorithm(ABC):
         pass
 
     def get_neighbors(self, state):
-        # Convert tuple to list for manipulation
         state = list(state)
         size = int(len(state) ** 0.5)
         zero_idx = state.index(0)
         zero_row, zero_col = zero_idx // size, zero_idx % size
         
         moves = []
-        # Check all possible moves (up, down, left, right)
         for dr, dc in [(-1, 0), (1, 0), (0, -1), (0, 1)]:
             new_row, new_col = zero_row + dr, zero_col + dc
             if 0 <= new_row < size and 0 <= new_col < size:
@@ -59,7 +57,6 @@ class BestFirstAlgorithm(Algorithm):
                 return path
             
             neighbors = self.get_neighbors(current_state)
-            # Sort by state ID if heuristic values are equal
             neighbors.sort(key=lambda x: x[0])
             
             for next_state, action in neighbors:
@@ -88,7 +85,7 @@ class AStarAlgorithm(Algorithm):
                 continue
             
             neighbors = self.get_neighbors(current_state)
-            neighbors.sort(key=lambda x: x[0])  # Sort by state ID
+            neighbors.sort(key=lambda x: x[0])  
             
             for next_state, action in neighbors:
                 new_g = g + 1
@@ -99,7 +96,6 @@ class AStarAlgorithm(Algorithm):
         
         return []
 
-# Heuristic functions
 def hamming_distance(state, goal_state):
     return sum(1 for i, j in zip(state, goal_state) if i != j and i != 0)
 
