@@ -17,7 +17,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-smkd)(y42va&6qbz@!-h%a#tx(8w5c(zyix9_htvi5*1$t7_mw'
 DEBUG = True
 
-ALLOWED_HOSTS = ['127.0.0.1', 'localhost', 'vestacka.onrender.com']
+ALLOWED_HOSTS = ['127.0.0.1', 'localhost', '0.0.0.0', 'vestacka.onrender.com']
 
 CSRF_TRUSTED_ORIGINS = [
     'https://vestacka.onrender.com',
@@ -96,5 +96,6 @@ USE_I18N = True
 USE_TZ = True
 
 STATIC_URL = 'static/'
+STATIC_ROOT = BASE_DIR / 'staticfiles'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'

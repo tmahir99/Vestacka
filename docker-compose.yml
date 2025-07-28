@@ -1,0 +1,34 @@
+services:
+  connect4:
+    build:
+      context: ./connect4
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./connect4:/app
+    environment:
+      - DEBUG=1
+      - DJANGO_SETTINGS_MODULE=connect4.settings
+    restart: unless-stopped
+    networks:
+      - vestacka_network
+
+  pyzzle:
+    build:
+      context: ./pyzzle
+      dockerfile: Dockerfile
+    ports:
+      - "8001:8001"
+    volumes:
+      - ./pyzzle:/app
+    environment:
+      - DEBUG=1
+      - DJANGO_SETTINGS_MODULE=pyzzle.settings
+    restart: unless-stopped
+    networks:
+      - vestacka_network
+
+networks:
+  vestacka_network:
+    driver: bridge

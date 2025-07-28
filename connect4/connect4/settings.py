@@ -18,7 +18,7 @@ SECRET_KEY = 'django-insecure-c+x)#d1kwefbw+1m&*iq0^q33-m_=uf1j(#d3x#2)*b_zkv&(a
 
 DEBUG = True
 
-ALLOWED_HOSTS = ['127.0.0.1', 'localhost', 'connect3-1.onrender.com']
+ALLOWED_HOSTS = ['127.0.0.1', 'localhost', '0.0.0.0', 'connect3-1.onrender.com']
 
 CSRF_TRUSTED_ORIGINS = [
     'https://connect3-1.onrender.com',
@@ -96,6 +96,7 @@ USE_I18N = True
 USE_TZ = True
 
 STATIC_URL = '/static/'
+STATIC_ROOT = BASE_DIR / 'staticfiles'
 
 STATICFILES_DIRS = [
     BASE_DIR / "game" / "static",
